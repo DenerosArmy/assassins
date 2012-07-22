@@ -69,8 +69,9 @@ def add_new_player(request):
     uid = request.GET('id')
     response = simplejson.loads(response)
 
-    Assassin.add_player(response['uid'],
-                        #blahblahblah)
+    Assassin.add_player("590037593", "asdfsadf", "Richie", "Zeng", "Male",
+                        "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-snc4/157664_590037593_1292406756_q.jpg")
+
 
 def add_player_to_game(request):
     player = Assassin.objects.filter(facebook_id=uid)
