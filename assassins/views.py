@@ -137,7 +137,8 @@ def add_new_player(request):
     picture = "http://graph.facebook.com/" + username + "/picture"
 
     add_player(uid, "auth token", f_name, l_name, gender, picture)
-    return HttpResponse(request.POST['fbid'])
+    response = f_name + l_name + ", " + picture
+    return HttpResponse(response)
 
 def add_player_to_game(request):
     player = Assassin.objects.get(facebook_id=uid)

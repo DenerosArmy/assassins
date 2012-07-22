@@ -1,21 +1,31 @@
+from random import choice
 import time
 
 from assassins.models import *
 
 
 def add_player(uid, access_token, first_name, last_name, gender, photo, admin=False):
-    Assassin.objects.create(facebook_id=uid,
-                            access_token=access_token,
-                            first_name=first_name,
-                            last_name=last_name,
-                            gender=gender,
-                            photo=photo,
-                            location_lat=0.0,
-                            location_long=0.0,
-                            session_id="0",
-                            alive=True,
-                            kills=0,
-                            is_admin=admin)
+    new_player = Assassin.objects.create(facebook_id=uid,
+                                         access_token=access_token,
+                                         first_name=first_name,
+                                         last_name=last_name,
+                                         gender=gender,
+                                         photo=photo,
+                                         location_lat=0.0,
+                                         location_long=0.0,
+                                         session_id="0",
+                                         alive=True,
+                                         kills=0,
+                                         is_admin=admin)
+    hunter = random_player()
+    victim = hunter.target_id
+    new_player.target_id = victim
+    hunter.target_id = uid
+    new_player.save()
+    hunter.save()
+
+def random_player():
+    return choice(Assassin.objects.filter(alive=True))
 
 def add_target(uid, target_id):
     player = Assassin.objects.get(facebook_id=uid)
