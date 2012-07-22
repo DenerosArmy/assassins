@@ -47,7 +47,9 @@ def get_location(request):
         JSON_string += "'photo':"+player.get_photo_display()+","
         JSON_string += "'lat':"+player.get_location_lat_display()+","
         JSON_string += "'lng':"+player.get_location_long_display()+"},"
-    JSON_string = JSON_string[:-1]+"]"
+    if JSON_string != "[":
+        JSON_string = JSON_string[:-1]
+    JSON_string += "]"
     return HttpResponse(JSON_string)
 
 def update_location(request):
@@ -68,8 +70,8 @@ def add_new_player(request):
     uid = request.GET('id')
     response = simplejson.loads(response)
 
-    Assassin.add_player(response['uid'],
-                        #blahblahblah)
+    Assassin.add_player("590037593", "auth token", "Richie", "Zeng", "Male",
+                        "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-snc4/157664_590037593_1292406756_q.jpg")
 
 def add_player_to_game(request):
     player = Assassin.objects.filter(facebook_id=uid)
