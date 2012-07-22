@@ -69,7 +69,6 @@
       }
       #feed-bar-thing {
         width: 100%;
-        margin-top: -5px;
       }
       #feed-bar-thing img {
         display: inline-block;
@@ -111,9 +110,17 @@
       .feed-randomthing-title {
         text-align: center;
       }
+      .sidebar-profile {
+        margin: 0px 1px 1px 1px;
+      }
+      #feed-players-collage {
+        margin-top: 10px;
+        margin-bottom: 20px;
+      }
     </style>
     <script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script src="http://50.56.174.102/js/jquery.blockUI.js"></script>
     <script>
 
       var stylesArray = [
@@ -133,9 +140,9 @@
       var markers = [];
 
       function initialize() {
-        var haightAshbury = new google.maps.LatLng(37.776008, -122.392908);
+        var haightAshbury = new google.maps.LatLng(37.775658, -122.394308);
         var mapOptions = {
-          zoom: 14,
+          zoom: 19,
           center: haightAshbury,
           mapTypeId: google.maps.MapTypeId.ROADMAP,
           styles: stylesArray
@@ -154,16 +161,19 @@
 
         var image = new google.maps.MarkerImage(profilepic,
         // This marker is 20 pixels wide by 32 pixels tall.
-        new google.maps.Size(50, 50),
+        new google.maps.Size(50, 70),
         // The origin for this image is 0,0.
         new google.maps.Point(0,0),
         // The anchor for this image is the base of the flagpole at 0,32.
-        new google.maps.Point(25, 50));
+        new google.maps.Point(25, 70));
+
+        var shadow = "http://50.56.174.102/images/shadow.png";
 
         marker = new google.maps.Marker({
           position: location,
           map: map,
-          icon: image
+          icon: image,
+          shadow: shadow
         });
         markers.push(marker);
       }
@@ -218,12 +228,23 @@
         });
 			}
 
+      var oldLength = 0;
+
+      function flashScreen() {
+        $.blockUI({ message: null }); 
+        setTimeout($.unblockUI, 400);
+      }
+
 			function refreshFeed() {
 				$.ajax({
 					url: "http://50.56.174.102:8000/poll_feed",
 					dataType: 'json'
 				}).always(function(data) {
 					var nomnom = "";		
+          if (data.length > oldLength) {
+            flashScreen();
+            oldLength = data.length;
+          }
 					for ($i = 0; $i < data.length; $i++) {
 						var utcString = data[$i]['time'];
 						var d = new Date(0);
@@ -253,13 +274,20 @@
           var deadWidth = barWidth * (bodyCount / totalPlayers);
           //console.log(aliveWidth + " " + deadWidth);
           $("#feed-bar-left").css('width',aliveWidth);
-          $("#feed-bar-left").html('<img src="http://50.56.174.102/images/heart.png" />&nbsp;' + totalSurvivors);
+          $("#feed-bar-left").html(totalSurvivors);
+          //$("#feed-bar-left").html('<img src="http://50.56.174.102/images/heart.png" />' + totalSurvivors);
+          //var rightBarString = "";
           $("#feed-bar-right").css('width',deadWidth);
-          if (bodyCount != 0) {
-            $("#feed-bar-right").html(bodyCount + '&nbsp;<img src="http://50.56.174.102/images/skull.png" />');
-          } else {
+          if (bodyCount != 0)
+            $("#feed-bar-right").html(bodyCount);
+          else
             $("#feed-bar-right").empty();
-          }
+          /*if (bodyCount != 0) {
+            rightBarString += bodyCount;
+            if (deadWidth >= 50)
+              rightBarString += '&nbsp;<img src="http://50.56.174.102/images/skull.png" />';
+            $("#feed-bar-right").html(rightBarString);
+          }*/
           var unix = Math.round(+new Date()/1000);
           var today = new Date(0);
           today.setUTCSeconds(unix); 
@@ -272,10 +300,38 @@
         })
       }
 
+      function populatePlayers() {
+        $.ajax({
+          url: "http://50.56.174.102:8000/poll_location",
+          dataType: 'json'
+        }).always(function(data) {
+          var photoString = "";
+          for ($i = 0; $i < data.length; $i++) {
+            //console.log('first: ' + data[$i]['name']);
+            fbid = data[$i]['fbid'];
+            profilepic = data[$i]['photo'];
+            photoString += '<img class="sidebar-profile" id="' + fbid + '" src="' + profilepic + '" />';
+          } $('#feed-players-collage').html(photoString);
+          //console.log(photoString);
+        });
+      }
+
+      function revivePlayers(fbid) {
+        $.ajax({
+          url: "http://50.56.174.102:8000/revive_all",
+        }).always(function() {
+
+        });
+      }
+
       $(document).ready(function() {
+        populatePlayers();
 				setInterval("refreshLocations()",1000);
 				setInterval("refreshFeed()",1000);
         setInterval("refreshBar()",1000);
+        $("#lolololol").click(function() {
+          revivePlayers();
+        });
       });
 
     </script>
@@ -288,7 +344,7 @@
     </div>
     <div id="right-column">
       <div id="feed-statistics">
-        <img src="http://50.56.174.102/images/logo-flat.png" style="width: 100%; height: 100%;" />
+        <a href="#" id="lolololol"><img src="http://50.56.174.102/images/logo-flat.png" style="width: 100%; height: 100%;" /></a>
       </div>
       <div class="feed-randomthing">
         <div id="feed-bar-thing">
@@ -309,12 +365,16 @@
         </div>
       </div>
       <div class="feed-randomthing">
-        <div class="feed-randomthing-title">Statistics</div>
+        <div class="feed-randomthing-title">Game Information</div>
         <ul>
           <li class="feed-list-item">Start: 7/22/2012 4:04AM PST</li>
           <li class="feed-list-item">Location: San Francisco, CA</li>
           <li class="feed-list-item">Creator: Richie Zeng</li>
         </ul>
+      </div>
+      <div class="feed-randomthing">
+        <div class="feed-randomthing-title">Players</div>
+        <div id="feed-players-collage"></div>
       </div>
     </div>
   </body>

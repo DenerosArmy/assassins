@@ -1,3 +1,4 @@
+from random import choice
 import simplejson
 import urllib
 import urllib2
@@ -24,16 +25,29 @@ def revive_all(request):
     return HttpResponse("revive all success")
 
 def report_kill(request):
+    possible_messages = ["{1} just wiped the floor with {0}!",
+                         "{0} was strolling down the street waiting for when {1} blasted him in the FACE!!! H-H-H-HEADSHOT",
+                         "{0} ran into a pole and died. {1} was there to laugh at him.",
+                         "{1} just cut venture funding from {0}, who eventually died.",
+                         "{1} offered {0} the blue pill or the red pill. {0} took the one made from rat poison."]
     assassin_id, lat, lng, target_id, tar_lat, tar_long = extract_location_data(request)
     if Assassin.objects.get(facebook_id=assassin_id).alive == True:
         execute_kill(assassin_id)
         assassin_name = Assassin.objects.get(facebook_id=assassin_id).first_name
         victim_name = Assassin.objects.get(facebook_id=target_id).first_name
-        message = assassin_name+" just killed "+victim_name+"!"
+        message = choice(possible_messages).format(victim_name, assassin_name)
         post_to_feed(message, assassin_id, target_id)
         return HttpResponse("kill")
+    else:
+        return HttpResponse("dead")
 
 def confirm_melee_kill(request):
+    possible_messages = ["{1} clubbed {0} upside the head for massive damage. WHACK! WHAMMO! BOOM!",
+                        "{1} knew that the first rule of hitting with a club is that one don't talk about hitting with a club. The second is to hit {0} when he isn't paying attention. BAM! BOOM! WHOOSH!",
+                        "{1} inducted {0} into the clubbed club, clubbing {0} for massive damage. BONK! BARF! BIFF!",
+                        "Even though {1} gave {0} a knuckle sandwich, {0} still seemed hungry, so {1} gave him a club sandwich with a club for enormous damage. WHAMMO! SMACK! WHACK!",
+                        "{1} goes clubbing with {0}, and I don't mean the dancing kind"]
+
     assassin_id, lat, lng, target_id, tar_lat, tar_long = extract_location_data(request)
     if Assassin.objects.get(facebook_id=target_id).alive == True:
         dist = get_distance(lat, lng, tar_lat, tar_long)
@@ -41,9 +55,11 @@ def confirm_melee_kill(request):
             execute_kill(assassin_id)
             assassin_name = Assassin.objects.get(facebook_id=assassin_id).first_name
             victim_name = Assassin.objects.get(facebook_id=target_id).first_name
-            message = "MELEE! "+assassin_name+" just killed "+victim_name+"!"
+            message = choice(possible_messages).format(victim_name, assassin_name)
             post_to_feed(message, assassin_id, target_id)
             return HttpResponse("kill")
+    else:
+        return HttpResponse("dead")
     return HttpResponse("nokill")
 
 def assign_target(request):
@@ -65,9 +81,11 @@ def extract_location_data(request):
     lng = request.POST['lng']
     assassin = Assassin.objects.get(facebook_id=assassin_id)
     target_id = assassin.target_id
-    target = Assassin.objects.get(facebook_id=target_id)
-    tar_lat, tar_long = get_location(target_id)
-    return assassin_id, lat, lng, target_id, tar_lat, tar_long
+    if target_id:
+        target = Assassin.objects.get(facebook_id=target_id)
+        tar_lat, tar_long = get_location(target_id)
+        return assassin_id, lat, lng, target_id, tar_lat, tar_long
+    return assassin_id, lat, lng, target_id, 0, 0
 
 def get_distance(lat1, lng1, lat2, lng2):
     return (((float(lat1)-float(lat2))**2)+((float(lng1)-float(lng2))**2))**0.5
@@ -87,7 +105,7 @@ def poll_location(request):
     return HttpResponse(JSON_string)
 
 def get_posts(request):
-    post_sets = get_feed(5)
+    post_sets = get_feed()
     JSON_string = "["
     for post_set in post_sets:
         JSON_string += "{\"from\":\"" + post_set.from_user + "\","
@@ -111,7 +129,6 @@ def get_statistics(request):
 def update_player_location(request):
     assassin_id, lat, lng, target_id, tar_lat, tar_long = extract_location_data(request)
     update_location(assassin_id, lat, lng)
-    """
     if Assassin.objects.get(facebook_id=assassin_id).alive == True:
         bombs = get_bombs_on_me(assassin_id)
         for bomb in bombs:
@@ -124,7 +141,8 @@ def update_player_location(request):
                 bomb.delete()
                 post_to_feed(message, assassin_id, target_id)
                 return HttpResponse("kill")
-    """
+    else:
+        return HttpResponse("dead")
     return HttpResponse("nokill")
 
 def new_game(request):

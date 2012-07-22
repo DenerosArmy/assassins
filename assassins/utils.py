@@ -5,8 +5,8 @@ from assassins.models import *
 
 
 def add_player(uid, access_token, first_name, last_name, gender, photo, admin=False):
-    lat = 37.78 + random() / 1000
-    lng = -122.45 + random() / 1000
+    lat = 37.775 + random() / 800
+    lng = -122.395 + random() / 800
     new_player = Assassin.objects.get_or_create(facebook_id=uid,
                                          access_token=access_token,
                                          first_name=first_name,
@@ -76,8 +76,8 @@ def post_to_feed(message, from_user=None, to_user=None, session="0"):
                         session=session,
                         create_time=now)
 
-def get_feed(limit, session=None):
-    return Feed.objects.order_by("-create_time")[:limit+1]
+def get_feed(session=None):
+    return Feed.objects.order_by("-create_time")
 
 
 def execute_kill(uid):
@@ -86,7 +86,7 @@ def execute_kill(uid):
     victim = killer.target_id
     victim = Assassin.objects.get(facebook_id=victim)
     victim.alive = False
-    killer.target_id = victim.target_id
+    #killer.target_id = victim.target_id
     killer.save()
     victim.save()
 
@@ -98,8 +98,8 @@ def execute_revive(uid):
 def execute_revive_all():
     for player in Assassin.objects.filter():
     #for player in Assassin.objects.filter(alive=False):
-        lat = 37.78 + random() / 1000
-        lng = -122.45 + random() / 1000
+        lat = 37.775 + random() / 800
+        lng = -122.395 + random() / 800
         player.location_lat = lat
         player.location_long = lng
         player.alive = True
