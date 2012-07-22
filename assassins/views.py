@@ -73,14 +73,13 @@ def poll_location(request):
     return HttpResponse(JSON_string)
 
 def get_posts(request):
-    posts_sets = Feed.get_limit(5)
+    post_sets = get_feed(5)
     JSON_string = "["
     for post_set in post_sets:
-        JSON_string += "{\"fbid\":\""+post_set.facebook_id+"\","
-        JSON_string += "\"name\":\""+post_set.first_name+"\","
-        JSON_string += "\"photo\":\""+post_set.photo+"\","
-        JSON_string += "\"lat\":\""+str(post_set.location_lat)+"\","
-        JSON_string += "\"lng\":\""+str(post_set.location_long)+"\"},"
+        JSON_string += "{\"from\":\"" + post_set.from_user + "\","
+        JSON_string += "\"to\":\"" + post_set.to_user + "\","
+        JSON_string += "\"time\":\"" + str(post_set.create_time) + "\","
+        JSON_string += "\"message\":\"" + post_set.message + "\"},"
     if JSON_string != "[":
         JSON_string = JSON_string[:-1]
     JSON_string += "]"
@@ -134,7 +133,7 @@ def home(request):
         location['lat'] = str(player.location_lat)
         location['long'] = str(player.location_long)
         locations.append(location)
-    posts_sets = Feed.get_limit(5)
+    posts_sets = get_feed(5)
     posts = []
     for post_set in posts_sets:
         post = {}

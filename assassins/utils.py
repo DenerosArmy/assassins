@@ -60,7 +60,7 @@ def post_to_feed(message, from_user=None, to_user=None, session="0"):
                         create_time=now)
 
 def get_feed(limit, session=None):
-    return Feed.objects.order_by("-created_time")[:limit+1]
+    return Feed.objects.order_by("-create_time")[:limit+1]
 
 
 def kill(uid):
