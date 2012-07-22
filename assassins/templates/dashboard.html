@@ -46,7 +46,7 @@
         border: 1px green solid;
         margin: 3% -5% 0% 0%;
       }
-      #feed-randomthing {
+      .feed-randomthing {
         width: 98%;
         height: 30px;
         /*height: 71%;*/
@@ -66,6 +66,11 @@
       #feed-bar-thing {
         width: 100%;
       }
+      #feed-bar-thing img {
+        display: inline-block;
+        width: 25px;
+        height: 25px;
+      }
       #feed-bar-left {
         display: inline-block;
         background: -webkit-gradient(linear, left center, right center, from(#0F0), to(#000)); /* for webkit browsers */
@@ -83,6 +88,15 @@
         color: white;
       }
       #feed-time {
+        vertical-align: default;
+        padding: 5px;
+        text-align: center;
+        font-size: 11px;
+      }
+      #feed-leaderboard {
+        padding: 5px;
+      }
+      .feed-randomthing-title {
         text-align: center;
       }
     </style>
@@ -227,14 +241,17 @@
           var deadWidth = barWidth * (bodyCount / totalPlayers);
           console.log(aliveWidth + " " + deadWidth);
           $("#feed-bar-left").css('width',aliveWidth);
-          $("#feed-bar-left").html(totalSurvivors);
+          $("#feed-bar-left").html('<img src="http://50.56.174.102/images/heart.png" />&nbsp;' + totalSurvivors);
           $("#feed-bar-right").css('width',deadWidth);
-          $("#feed-bar-right").html(bodyCount);
+          $("#feed-bar-right").html(bodyCount + '&nbsp;<img src="http://50.56.174.102/images/skull.png" />');
 
+          var unix = Math.round(+new Date()/1000);
           var today = new Date(0);
-          d.setUTCSeconds((new Date).getTime());          
+          today.setUTCSeconds(unix); 
 
-          $("#feed-time").html(startTime);
+          console.log(today);         
+
+          $("#feed-time").html(today.toString());
 
           //console.log(totalPlayers + " " + totalSurvivors + " " + bodyCount + " " + fatalities);
         })
@@ -258,13 +275,18 @@
       <div id="feed-statistics">
         <img src="http://50.56.174.102/images/logo-flat.png" style="width: 100%; height: 100%;" />
       </div>
-      <div id="feed-randomthing">
+      <div class="feed-randomthing">
         <div id="feed-bar-thing">
           <span id="feed-bar-left"></span><span id="feed-bar-right"></span>
         </div>
       </div>
-      <div id="feed-randomthing">
+      <div class="feed-randomthing">
         <div id="feed-time"></div>
+      </div>
+      <div class="feed-randomthing">
+        <div id="feed-leaderboard">
+          <div class="feed-randomthing-title">Leaderboard</div>
+        </div>
       </div>
     </div>
   </body>
