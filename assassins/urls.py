@@ -7,12 +7,18 @@ from views import *
 
 urlpatterns = patterns('',
     # Examples:
-    # url(r'^$', 'assassins.views.home', name='home'),
+
+    # Web Services
+    url(r'^$', 'assassins.views.home', name='home'),
+
+    # Endpoint Services
     url(r'^update_location', 'assassins.views.update_location', name='update_location'),
     url(r'^poll_location', 'assassins.views.get_location', name='poll_location'),
+    url(r'^report_kill', 'assassins.views.report_kill', name='report_kill'),
     url(r'^confirm_melee_kill', 'assassins.views.confirm_mellee_kill', name='confirm_melee_kill'),
     url(r'^confirm_bomb_kill', 'assassins.views.confirm_bomb_kill', name='confirm_bomb_kill'),
     url(r'^plant_bomb', 'assassins.views.plant_bomb', name='plant_bomb'),
+
     # url(r'^assassins/', include('assassins.foo.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
