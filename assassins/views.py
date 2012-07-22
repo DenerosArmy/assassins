@@ -34,6 +34,7 @@ def extract_location_data(request):
     target = Assassin.objects.filter(facebook_id=target_id)
     tar_lat, tar_long = Assassin.get_location(target_id)
     return assassin_id, lat, lng, target_id, tar_lat, tar_long
+
 def get_distance(lat1, lng1, lat2, lng2):
     return sqrt(((lat1-lat2)**2)+((lng1-lng2)**2))
 
@@ -55,8 +56,9 @@ def add_new_player(request):
     uid = request.GET('id')
     response = simplejson.loads(response)
 
-    Assassin.add_player(response['uid'],
-                        #blahblahblah)
+    Assassin.add_player("590037593", "asdfsadf", "Richie", "Zeng", "Male",
+                        "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-snc4/157664_590037593_1292406756_q.jpg")
+
 
 def add_player_to_game(request):
     player = Assassin.objects.filter(facebook_id=uid)
