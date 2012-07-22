@@ -12,7 +12,7 @@ from utils import *
 
 def report_kill(request):
     assassin_id, lat, lng, target_id, tar_lat, tar_long = extract_location_data(request)
-    kill(target_id)
+    execute_kill(assassin_id)
     assassin_name = Assassin.objects.get(facebook_id=assassin_id).first_name
     victim_name = Assassin.objects.get(facebook_id=target_id).first_name
     message = assassin_name+" just killed "+victim_name+"!"
@@ -23,7 +23,7 @@ def confirm_melee_kill(request):
     assassin_id, lat, lng, target_id, tar_lat, tar_long = extract_location_data(request)
     dist = get_distance(lat, lng, tar_lat, tar_long)
     if dist < Config.MAX_MELEE_KILL_DIST:
-        kill(target_id)
+        execute_kill(assassin_id)
         message = "MELEE! "+assassin_name+" just killed "+victim_name+"!"
         post_to_feed(message, assassin_id, victim_name)
         return HttpResponse("kill")

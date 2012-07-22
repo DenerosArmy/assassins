@@ -63,9 +63,12 @@ def get_feed(limit, session=None):
     return Feed.objects.order_by("-create_time")[:limit+1]
 
 
-def kill(uid):
-    victim = Assassin.objects.get(facebook_id=uid)
+def execute_kill(uid):
+    killer = Assassin.objects.get(facebook_id=uid)
+    killer.kills += 1
+    victim = killer.target_id
     victim.alive = False
+    killer.save()
     victim.save()
 
 def add_bomb(owner_id, target_id, bomb_type, bomb_lat, bomb_long, secs=None):
