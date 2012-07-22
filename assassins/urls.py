@@ -8,6 +8,7 @@ from views import *
 urlpatterns = patterns('',
     # Examples:
     # url(r'^$', 'assassins.views.home', name='home'),
+    url(r'^add_new_player', 'assassins.views.add_new_player', name='add_new_player'),
     url(r'^update_location', 'assassins.views.update_location', name='update_location'),
     url(r'^poll_location', 'assassins.views.get_location', name='poll_location'),
     url(r'^confirm_melee_kill', 'assassins.views.confirm_mellee_kill', name='confirm_melee_kill'),

@@ -1,4 +1,4 @@
-Import simplejson
+import simplejson
 import urllib2
 
 from django.http import HttpRequest, HttpResponse
