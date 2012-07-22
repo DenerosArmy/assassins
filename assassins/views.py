@@ -93,4 +93,14 @@ def add_player_to_game(request):
     update_session(player, game)
     
 def get_feed(request):
-    posts = Feed.get_limit(5)
+    posts_sets = Feed.get_limit(5)
+    posts = []
+    for post in posts_sets:
+        post = {}
+        post['fbid'] = post.facebook_id
+        post['name'] = post.first_name
+        post['photo'] = post.photo
+        post['lat'] = str(post.location_lat)
+        post['lng'] = str(post.location_long)
+        posts.append(post)
+    return render_to_response('home.html', RequestContext(request,{"posts":posts}))
