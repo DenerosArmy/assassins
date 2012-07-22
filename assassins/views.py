@@ -92,7 +92,7 @@ def add_player_to_game(request):
     game = AssassinSession.objects.filter(session_id=game_id)
     update_session(player, game)
     
-def get_feed(request):
+def home(request):
     players = Player.objects.all()
     locations = []
     for player in players:
