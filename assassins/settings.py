@@ -4,17 +4,25 @@ DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
+    ('Richie', 'richzeng@gmail.com'),
     # ('Your Name', 'your_email@example.com'),
 )
 
 MANAGERS = ADMINS
 
-DATABASE_ENGINE = 'mysql'           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'ado_mssql'.
-DATABASE_NAME = 'assassin'             # Or path to database file if using sqlite3.
-DATABASE_USER = 'root'             # Not used with sqlite3.
-DATABASE_PASSWORD = 'chickencheese'         # Not used with sqlite3.
-DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
-DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
+
+DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'ado_mssql'.
+            'NAME': 'assassin',             # Or path to database file if using sqlite3.
+            'USER': 'root',             # Not used with sqlite3.
+            'PASSWORD': 'chickencheese',         # Not used with sqlite3.
+            'HOST': '',             # Set to empty string for localhost. Not used with sqlite3.
+            'PORT': '',             # Set to empty string for default. Not used with sqlite3.
+            }
+        }
+
+
 
 
 # Local time zone for this installation. Choices can be found here:

@@ -5,7 +5,7 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
-from config import Config
+from girl.config import Config
 from models import *
 
 def confirm_melee_kill(request):
