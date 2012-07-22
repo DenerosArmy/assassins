@@ -23,7 +23,7 @@ def confirm_melee_kill(request):
     assassin_id, lat, lng, target_id, tar_lat, tar_long = extract_location_data(request)
     dist = get_distance(lat, lng, tar_lat, tar_long)
     if dist < Config.MAX_MELEE_KILL_DIST:
-        Assassin.kill(assassin_id)
+        kill(target_id)
         message = "MELEE! "+assassin_name+" just killed "+victim_name+"!"
         post_to_feed(message, assassin_id, victim_name)
         return HttpResponse("kill")
@@ -41,7 +41,7 @@ def assign_target(request):
 
 def plant_bomb(request):
     assassin_id, lat, lng, target_id, tar_lat, tar_long = extract_location_data(request)
-    bomb_type = request.GET['type']
+    bomb_type = request.POST['type']
     if bomb_type in ('sticky', 'mine'):
         add_bomb(assassin_id, target_id, bomb_type, lat, lng, seconds)
 
@@ -95,7 +95,7 @@ def update_player_location(request):
     #for bomb in bombs:
         #b_lat
         #if get_distancebomb.bomb_lat,
-    return HttpResponse("success")
+    return HttpResponse("Location updated")
 
 def new_game(request):
     add_session(request.POST['name'],
