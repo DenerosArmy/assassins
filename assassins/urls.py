@@ -1,10 +1,12 @@
 from django.conf.urls import patterns, include, url
+from views import *
 
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
 # admin.autodiscover()
 
 urlpatterns = patterns('',
+    url(r'^api/kill', kill_confirm),
     # Examples:
     # url(r'^$', 'assassins.views.home', name='home'),
     # url(r'^assassins/', include('assassins.foo.urls')),
