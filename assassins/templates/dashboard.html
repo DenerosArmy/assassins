@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.5.1/build/cssreset/cssreset-min.css">
+		<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.5.1/build/cssreset/cssreset-min.css">
+		<link href='http://fonts.googleapis.com/css?family=Droid+Sans+Mono' rel='stylesheet' type='text/css'>
     <style>
       html {
         background-color: black;
-        height: 100%;
+				height: 100%;
+				font-family: 'Droid Sans Mono', sans-serif;
+				color: green;
       }
       body {
         width: 100%;
@@ -25,8 +28,13 @@
         width: 98%;
         height: 22%;
         border: 1px green solid;
-        margin: 1%;
-      }
+				margin: 1%;
+				overflow: scroll;
+			}
+			.feed-item {
+				padding-left: 5px;
+				font-size: 12px;
+			}
       #right-column {
         width: 25%;
         height: 100%;
@@ -34,13 +42,14 @@
       }
       #feed-statistics {
         width: 98%;
-        height: 50%;
+        height: 25%;
         border: 1px green solid;
         margin: 3% -5% 0% 0%;
       }
       #feed-randomthing {
         width: 98%;
-        height: 46%;
+        height: 30px;
+        /*height: 71%;*/
         border: 1px green solid;
         margin: 2% -5% 0% 0%;
       }
@@ -53,6 +62,28 @@
         width: 98%;
         background-color: black;
         opacity: 0.5;
+      }
+      #feed-bar-thing {
+        width: 100%;
+      }
+      #feed-bar-left {
+        display: inline-block;
+        background: -webkit-gradient(linear, left center, right center, from(#0F0), to(#000)); /* for webkit browsers */
+        width: 50%;
+        height: 30px;
+        text-align: left;
+        color: black;
+      }
+      #feed-bar-right {
+        display: inline-block;
+        width: 50%;
+        background: -webkit-gradient(linear, left center, right center, from(#000), to(#F00)); /* for webkit browsers */
+        height: 30px;
+        text-align: right;
+        color: white;
+      }
+      #feed-time {
+        text-align: center;
       }
     </style>
     <script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
@@ -166,15 +197,53 @@
 					url: "http://50.56.174.102:8000/poll_feed",
 					dataType: 'json'
 				}).always(function(data) {
-					$nom = "";
-					for ($i = 0; $i < data.length, $i++) {
-						console.log(data[$i]);
-					$("#feed-liveupdate").empty().
+					var nomnom = "";		
+					for ($i = 0; $i < data.length; $i++) {
+						var utcString = data[$i]['time'];
+						var d = new Date(0);
+						d.setUTCSeconds(utcString);
+						var datastring = '<div class="feed-item">(' + d + '): ' + data[$i]['message'] + '</div>';
+						nomnom += datastring;
+					} //console.log(nomnom);
+					$('#feed-liveupdate').empty().html(nomnom).slideDown(1000);
 				});
 			}
 
+      function refreshBar() {
+        $.ajax({
+          url: "http://50.56.174.102:8000/poll_stats",
+          dataType: 'json'
+        }).always(function(data) {
+          var totalPlayers = data.total_players;
+          var totalSurvivors = data.total_survivors; //data['total_survivors'];
+          var bodyCount = data.body_count; //data['body_count'];
+          var fatalities = data.fatalities; //data['fatalities'];
+          var startTime = data.start_time;
+          console.log("peeps: " + totalSurvivors + " " + bodyCount);
+          var div = document.getElementById("feed-bar-thing");
+          var barWidth = div.offsetWidth;
+          //console.log(barWidth);
+          var aliveWidth = barWidth * (totalSurvivors / totalPlayers);
+          var deadWidth = barWidth * (bodyCount / totalPlayers);
+          console.log(aliveWidth + " " + deadWidth);
+          $("#feed-bar-left").css('width',aliveWidth);
+          $("#feed-bar-left").html(totalSurvivors);
+          $("#feed-bar-right").css('width',deadWidth);
+          $("#feed-bar-right").html(bodyCount);
+
+          var today = new Date(0);
+          d.setUTCSeconds((new Date).getTime());          
+
+          $("#feed-time").html(startTime);
+
+          //console.log(totalPlayers + " " + totalSurvivors + " " + bodyCount + " " + fatalities);
+        })
+      }
+
       $(document).ready(function() {
-        setInterval("refreshLocations()",1000);
+				setInterval("refreshLocations()",1000);
+				setInterval("refreshFeed()",1000);
+        setInterval("refreshBar()",1000);
       });
 
     </script>
@@ -187,8 +256,16 @@
     </div>
     <div id="right-column">
       <div id="feed-statistics">
+        <img src="http://50.56.174.102/images/logo-flat.png" style="width: 100%; height: 100%;" />
       </div>
-      <div id="feed-randomthing"></div>
+      <div id="feed-randomthing">
+        <div id="feed-bar-thing">
+          <span id="feed-bar-left"></span><span id="feed-bar-right"></span>
+        </div>
+      </div>
+      <div id="feed-randomthing">
+        <div id="feed-time"></div>
+      </div>
     </div>
   </body>
 </html>
