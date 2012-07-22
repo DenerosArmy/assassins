@@ -1,0 +1,189 @@
+CTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.5.1/build/cssreset/cssreset-min.css">
+    <style>
+      html {
+        background-color: black;
+        height: 100%;
+      }
+      body {
+        width: 100%;
+        height: 100%;
+      }
+      #map-canvas {
+        width: 98%;
+        height: 74%;
+        margin: 1%;
+      }
+      #left-column {
+        width: 75%;
+        height: 100%;
+        float: left;
+      }
+      #feed-liveupdate {
+        width: 98%;
+        height: 22%;
+        border: 1px green solid;
+        margin: 1%;
+      }
+      #right-column {
+        width: 25%;
+        height: 100%;
+        float: right;
+      }
+      #feed-statistics {
+        width: 98%;
+        height: 50%;
+        border: 1px green solid;
+        margin: 3% -5% 0% 0%;
+      }
+      #feed-randomthing {
+        width: 98%;
+        height: 46%;
+        border: 1px green solid;
+        margin: 2% -5% 0% 0%;
+      }
+      span.map-canvas-overlay {
+        visibility: hidden;
+        position: absolute;
+        left: 1%;
+        top: 1%;
+        height: 74%;
+        width: 98%;
+        background-color: black;
+        opacity: 0.5;
+      }
+    </style>
+    <script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script>
+
+      var stylesArray = [
+        {
+          stylers: [
+            { invert_lightness: true },
+            { hue: "#11ff00" },
+            { weight: 1 },
+            { saturation: 1 },
+            { lightness: 5 },
+            { visibility: "on" }
+          ]
+        }
+      ]
+
+      var map;
+      var markers = [];
+
+      function initialize() {
+        var haightAshbury = new google.maps.LatLng(37.776008, -122.392908);
+        var mapOptions = {
+          zoom: 14,
+          center: haightAshbury,
+          mapTypeId: google.maps.MapTypeId.ROADMAP,
+          styles: stylesArray
+        };
+        map = new google.maps.Map(document.getElementById('map-canvas'),
+            mapOptions);
+
+        //google.maps.event.addListener(map, 'click', function(event) {
+        //  addMarker(event.latLng);
+        //});
+      }
+
+      // Add a marker to the map and push to the array.
+      function addMarker(location, profilepic) {
+        //var image = 'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-snc4/370919_595242153_1965972844_q.jpg';
+
+        var image = new google.maps.MarkerImage(profilepic,
+        // This marker is 20 pixels wide by 32 pixels tall.
+        new google.maps.Size(50, 50),
+        // The origin for this image is 0,0.
+        new google.maps.Point(0,0),
+        // The anchor for this image is the base of the flagpole at 0,32.
+        new google.maps.Point(25, 50));
+
+        marker = new google.maps.Marker({
+          position: location,
+          map: map,
+          icon: image
+        });
+        markers.push(marker);
+      }
+
+      // Sets the map on all markers in the array.
+      function setAllMap(map) {
+        for (var i = 0; i < markers.length; i++) {
+          markers[i].setMap(map);
+        }
+      }
+
+      // Removes the overlays from the map, but keeps them in the array.
+      function clearOverlays() {
+        setAllMap(null);
+      }
+
+      // Shows any overlays currently in the array.
+      function showOverlays() {
+        setAllMap(map);
+      }
+
+      // Deletes all markers in the array by removing references to them.
+      function deleteOverlays() {
+        clearOverlays();
+        markers = [];
+      }
+
+      google.maps.event.addDomListener(window, 'load', initialize);
+
+      function refreshLocations() {
+        $.ajax({
+          type: 'GET',
+          url: "http://50.56.174.102:8000/poll_location",
+          processData: true,
+          data: {},
+          dataType: 'json'
+        }).done(function(data) {
+          deleteOverlays();
+          //console.log(data);
+          for ($i = 0; $i < data.length; $i++) {
+            latitude = data[$i][3];
+            longitude = data[$i][4];
+            profilepic = data[$i][2];
+            //console.log(latitude + " " + longitude);
+            addMarker(new google.maps.LatLng(latitude, longitude), profilepic);
+          }
+          setAllMap(map);
+          showOverlays();
+
+          /*
+          latitude = data.latitude;
+          longitude = data.longitude;
+          addMarker(new google.maps.LatLng(latitude, longitude));
+          setAllMap(map);
+          showOverlays();
+          */
+        });
+      }
+
+      $(document).ready(function() {
+        setInterval("refreshLocations()",1000);
+      });
+
+    </script>
+  </head>
+  <body>
+    <div id="left-column">
+      <div id="map-canvas"></div>
+      <span class="map-canvas-overlay"></span>
+      <div id="feed-liveupdate"></div>     
+    </div>
+    <div id="right-column">
+      <div id="feed-statistics">
+      </div>
+      <div id="feed-randomthing"></div>
+    </div>
+  </body>
+</html>
+
+
