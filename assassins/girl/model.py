@@ -36,9 +36,14 @@ class Player(models.Model):
 class Session(models.Model):
     session_id = models.AutoField(primary_key=True)
     session_name = models.CharField()
+    description = models.TextField()
+    creator = models.ForeignKey(Player)
 
-    def add_session(self, session_name=None):
-        self.objects.create(session_name=session_name)
+    def add_session(self, session_name=None, description):
+        player = Player.objects.get(facebook_id=uid)
+        self.objects.create(session_name=session_name,
+                            description=description,
+                            creator=player)
 
 class Feed(models.Model):
     post_id = models.AutoField(primary_key=True)

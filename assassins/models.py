@@ -8,3 +8,4 @@ class Assassin(Player):
 class AssassinSession(Game):
     live_players = models.IntegerField()
     time = models.FloatField()
+    length = models.IntegerField()
