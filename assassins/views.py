@@ -25,7 +25,7 @@ def confirm_melee_kill(request):
     if dist < Config.MAX_MELEE_KILL_DIST:
         kill(target_id)
         message = "MELEE! "+assassin_name+" just killed "+victim_name+"!"
-        post_to_feed(message, assassin_id, victim_name)
+        post_to_feed(message, assassin_id, victim_id)
         return HttpResponse("kill")
     else:
         return HttpResponse("nokill")
@@ -86,15 +86,18 @@ def get_posts(request):
     return HttpResponse(JSON_string)
 
 def update_player_location(request):
-    assassin_id = request.POST['fbid']
-    lat = request.POST['lat']
-    lng = request.POST['lng']
+    assassin_id, lat, lng, target_id, tar_lat, tar_long = extract_location_data(request)
     update_location(assassin_id, lat, lng)
-    #bombs = Bombs.objects.filter(target_id=assassin_id)
-    #for bomb in bombs:
-        #b_lat
-        #if get_distancebomb.bomb_lat,
-    return HttpResponse("Location updated")
+    bombs = get_bombs_on_me(assassin_id)
+    for bomb in bombs:
+        if get_distance(lat, lng, bomb.bomb_lat, bomb.bomb_long) < Config.MAX_BOMB_KILL_DIST:
+            kill(target_id)
+            assassin_name = Assassin.objects.get(facebook_id=assassin_id).first_name
+            victim_name = Assassin.objects.get(facebook_id=target_id).first_name
+            message = "BOOM! "+assassin_name+" just killed "+victim_name+"!"
+            post_to_feed(message, assassin_id, target_id)
+            return HttpResponse("kill")
+    return HttpResponse("nokill")
 
 def new_game(request):
     add_session(request.POST['name'],
