@@ -9,9 +9,10 @@ from girl.config import Config
 from models import *
 
 def confirm_melee_kill(request):
-    _, lat, lng, _, tar_lat, tar_long = extract_location_data(request)
+    assassin_id, lat, lng, target_id, tar_lat, tar_long = extract_location_data(request)
     dist = get_distance(lat, lng, tar_lat, tar_long)
     if dist < Config.MAX_MELEE_KILL_DIST:
+        Assassin.kill(assassin_id)
         return HttpResponse("kill")
     else:
         return HttpResponse("nokill")

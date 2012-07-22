@@ -72,6 +72,10 @@ class Assassin(Player):
     kills = models.IntegerField()
     target_id = models.CharField(max_length=16)
     games = models.ForeignKey('Session')
+    alive = models.BooleanField()
+
+    def kill(self, uid):
+        self.objects.get(facebook_id=uid).update(alive=False)
 
 class AssassinSession(Session):
     live_players = models.IntegerField()
