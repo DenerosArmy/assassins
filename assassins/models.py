@@ -10,7 +10,7 @@ class Player(models.Model):
     photo = models.CharField(max_length=128)
     location_lat = models.FloatField()
     location_long = models.FloatField()
-    session_id = models.CharField(max_length=8)
+    session_id = models.CharField(max_length=8, null=True)
     is_admin = models.BooleanField()
 
 
@@ -22,7 +22,7 @@ class Session(models.Model):
 
 class Feed(models.Model):
     post_id = models.AutoField(primary_key=True)
-    session = models.ForeignKey(Session)
+    session = models.ForeignKey(Session, null=True)
     from_user = models.CharField(max_length=16)
     to_user = models.CharField(max_length=16)
     message = models.CharField(max_length=256)

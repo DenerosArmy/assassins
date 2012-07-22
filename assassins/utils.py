@@ -48,7 +48,7 @@ def revoke_admin(uid):
 def add_session(session_name, description, uid):
     player = Player.objects.get(facebook_id=uid)
     Session.create(session_name=session_name,
-                        description=description)
+                   description=description)
 
 
 def post_to_feed(message, from_user=None, to_user=None, session=None):

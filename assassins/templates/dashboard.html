@@ -141,14 +141,11 @@
 					url: "http://50.56.174.102:8000/poll_location",
           dataType: 'json'
 				}).always(function(data) {
-					console.log('lol');
           deleteOverlays();
-          console.log('yay: ' + data);
-          for ($i = 0; $i < data.length; $i++) {
-            latitude = data[$i][3];
-            longitude = data[$i][4];
-            profilepic = data[$i][2];
-            //console.log(latitude + " " + longitude);
+					for ($i = 0; $i < data.length; $i++) {
+            latitude = data[$i]['lat'];
+            longitude = data[$i]['lng'];
+            profilepic = data[$i]['photo'];
             addMarker(new google.maps.LatLng(latitude, longitude), profilepic);
           }
           setAllMap(map);
@@ -162,7 +159,11 @@
           showOverlays();
           */
         });
-      }
+			}
+
+			function refreshFeed() {
+				
+			}
 
       $(document).ready(function() {
         setInterval("refreshLocations()",1000);
