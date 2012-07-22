@@ -1,11 +1,11 @@
 from django.db import models
 
 class Player(models.Model):
-    facebook_id = models.CharField(primary_key=True)
-    first_name = models.CharField()
-    last_name = models.CharField()
-    gender = models.CharField()
-    photo = models.CharField()
+    facebook_id = models.CharField(primary_key=True, max_length=16)
+    first_name = models.CharField(max_length=32)
+    last_name = models.CharField(max_length=32)
+    gender = models.CharField(max_length=8)
+    photo = models.CharField(max_length=128)
     location_lat = models.FloatField()
     location_long = models.FloatField()
     session = models.ForeignKey(Session)
@@ -39,11 +39,11 @@ class Player(models.Model):
 
 class Session(models.Model):
     session_id = models.AutoField(primary_key=True)
-    session_name = models.CharField()
+    session_name = models.CharField(max_length=128)
     description = models.TextField()
     creator = models.ForeignKey(Player)
 
-    def add_session(self, session_name=None, description, uid):
+    def add_session(self, session_name, description, uid):
         player = Player.objects.get(facebook_id=uid)
         self.objects.create(session_name=session_name,
                             description=description,
@@ -54,7 +54,7 @@ class Feed(models.Model):
     session = models.ForeignKey(Session)
     from_user = models.ForeignKey(Player)
     to_user = models.ForeignKey(Player)
-    message = models.CharField()
+    message = models.CharField(max_length=256)
     create_time = models.IntegerField()
 
     def post(self, message, from_user=None, to_user=None, session=None):
@@ -71,7 +71,7 @@ class Feed(models.Model):
 
 class Assassin(Player):
     kills = models.IntegerField()
-    target_id = models.CharField()
+    target_id = models.CharField(max_length=16)
     games = models.ForeignKey(Session)
 
 class AssassinSession(Session):
@@ -80,9 +80,9 @@ class AssassinSession(Session):
     length = models.IntegerField()
 
 class Bombs(models.Model):
-    owner_id = models.CharField()
-    target_id = models.CharField()
-    bomb_type = models.CharField()
+    owner_id = models.CharField(max_length=16)
+    target_id = models.CharField(max_length=16)
+    bomb_type = models.CharField(max_length=8)
     bomb_lat = models.FloatField()
     bomb_long = models.FloatField()
     seconds_to_detonation = models.IntegerField()
