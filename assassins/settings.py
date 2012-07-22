@@ -14,7 +14,7 @@ DATABASE_NAME = 'assassin'             # Or path to database file if using sqlit
 DATABASE_USER = 'root'             # Not used with sqlite3.
 DATABASE_PASSWORD = 'chickencheese'         # Not used with sqlite3.
 DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
-DATABASE_PORT = ''
+DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
 
 
 # Local time zone for this installation. Choices can be found here:
