@@ -51,7 +51,7 @@ def add_session(session_name, description, uid):
                    description=description)
 
 
-def post_to_feed(message, from_user=None, to_user=None, session=None):
+def post_to_feed(message, from_user=None, to_user=None, session="0"):
     now = time.time()
     Feed.objects.create(message=message,
                         from_user=from_user, 

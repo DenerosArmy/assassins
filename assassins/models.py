@@ -22,7 +22,7 @@ class Session(models.Model):
 
 class Feed(models.Model):
     post_id = models.AutoField(primary_key=True)
-    session = models.ForeignKey(Session, null=True)
+    session = models.CharField(max_length=16, null=True)
     from_user = models.CharField(max_length=16)
     to_user = models.CharField(max_length=16)
     message = models.CharField(max_length=256)

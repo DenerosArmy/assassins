@@ -162,7 +162,12 @@
 			}
 
 			function refreshFeed() {
-				
+				$.ajax({
+					url: "http://50.56.174.102:8000/pull_feed",
+					dataType: 'json'
+				}).always(function(data) {
+					$("#feed-liveupdate").empty().
+				});
 			}
 
       $(document).ready(function() {
