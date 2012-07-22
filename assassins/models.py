@@ -41,7 +41,6 @@ class Session(models.Model):
     session_id = models.AutoField(primary_key=True)
     session_name = models.CharField(max_length=128)
     description = models.TextField()
-    creator = models.ForeignKey(Player)
 
     def add_session(self, session_name, description, uid):
         player = Player.objects.get(facebook_id=uid)
