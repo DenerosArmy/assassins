@@ -22,7 +22,8 @@ def confirm_bomb_kill(request):
 def plant_bomb(request):
     assassin_id, lat, lng, target_id, tar_lat, tar_long = extract_location_data(request)
     bomb_type = request.GET('type')
-    Bombs.add
+    if bomb_type in ('sticky', 'mine'):
+        Bombs.add_bomb(assassin_id, target_id, bomb_type, lat, lng, seconds)
 
 def extract_location_data(request):
     assassin_id = request.GET('fbid')
