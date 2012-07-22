@@ -38,6 +38,19 @@ def extract_location_data(request):
 def get_distance(lat1, lng1, lat2, lng2):
     return sqrt(((lat1-lat2)**2)+((lng1-lng2)**2))
 
+def get_location(request):
+    players = Player.objects.all()
+    JSON_string = "["
+    for player in players:
+        JSON_string += "{'fbid':"+player.get_facebook_id_display()+","
+        JSON_string += "'name':"+player.get_first_name_display()+","
+        JSON_string += "'photo':"+player.get_photo_display()+","
+        JSON_string += "'lat':"+player.get_location_lat_display()+","
+        JSON_string += "'lng':"+player.get_location_long_display()+"},"
+    JSON_string = JSON_string[:-1]+"]"
+    return HttpResponse(JSON_string)
+
+
 def update_location(request):
     assassin_id = request.GET('fbid')
     lat = request.GET('lat')
