@@ -15,6 +15,11 @@ def add_player(uid, access_token, first_name, last_name, gender, photo, admin=Fa
                             kills=0,
                             is_admin=admin)
 
+def assign_target(uid, target_id):
+    player = Player.objects.get(facebook_id=uid)
+    player.target_id = target_id
+    player.save()
+
 def update_location(uid, latitude, longitude):
     player = Player.objects.get(facebook_id=uid)
     player.location_lat = latitude
