@@ -15,9 +15,11 @@ class Game(models.Model):
     game_name = models.CharField()
 
 class Admins(models.Model):
-    facebook_id = models.CharField(unique=True)
+    facebook_id = models.ForeignKey(Player)
 
 class Feed(models.Model):
     post_id = models.IntegerField(unique=True)
+    from_user = models.ForeignKey(Player)
+    to_user = models.ForeignKey(Player)
     post = models.CharField()
     create_time = models.IntegerField()
