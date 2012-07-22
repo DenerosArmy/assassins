@@ -28,8 +28,10 @@ def confirm_melee_kill(request):
     dist = get_distance(lat, lng, tar_lat, tar_long)
     if dist < Config.MAX_MELEE_KILL_DIST:
         execute_kill(assassin_id)
+        assassin_name = Assassin.objects.get(facebook_id=assassin_id).first_name
+        victim_name = Assassin.objects.get(facebook_id=target_id).first_name
         message = "MELEE! "+assassin_name+" just killed "+victim_name+"!"
-        post_to_feed(message, assassin_id, victim_id)
+        post_to_feed(message, assassin_id, target_id)
         return HttpResponse("kill")
     else:
         return HttpResponse("nokill")
@@ -46,8 +48,9 @@ def assign_target(request):
 def plant_bomb(request):
     assassin_id, lat, lng, target_id, tar_lat, tar_long = extract_location_data(request)
     bomb_type = request.POST['type']
-    if bomb_type in 'mine':
-        add_bomb(assassin_id, target_id, bomb_type, lat, lng)
+    if bomb_type == 'mine':
+        add_bomb(assassin_id, target_id, bomb_type, lat, lng, 99)
+    return HttpResponse("success")
 
 def extract_location_data(request):
     assassin_id = request.POST['fbid']
@@ -60,7 +63,7 @@ def extract_location_data(request):
     return assassin_id, lat, lng, target_id, tar_lat, tar_long
 
 def get_distance(lat1, lng1, lat2, lng2):
-    return sqrt(((lat1-lat2)**2)+((lng1-lng2)**2))
+    return (((float(lat1)-float(lat2))**2)+((float(lng1)-float(lng2))**2))**0.5
 
 def poll_location(request):
     players = Player.objects.all()
@@ -90,11 +93,12 @@ def get_posts(request):
     return HttpResponse(JSON_string)
 
 def get_statistics(request):
-    total_players = Assassin.objects.count()
-    total_survivors = Assassin.objects.filter(alive=True).count()
-    body_count = Assassin.objects.filter(alive=False).count()
-    fatalities = Assassin.objects.aggregate(Sum('kills'))
-    JSON_string = "{\"total_players\":\""+total_players+",\"total_survivors\":\""+total_survivors+",\"body_count\":\""+body_count+",\"fatalities\":\""+fatalities+"\"}"
+    total_players = str(Assassin.objects.count())
+    total_survivors = str(Assassin.objects.filter(alive=True).count())
+    body_count = str(Assassin.objects.filter(alive=False).count())
+    fatalities = str(Assassin.objects.aggregate(Sum('kills'))["kills__sum"])
+    start_time = "4:13 AM"
+    JSON_string = "{\"total_players\":\""+total_players+"\",\"total_survivors\":\""+total_survivors+"\",\"body_count\":\""+body_count+"\",\"fatalities\":\""+fatalities+"\",\"start_time\":\""+start_time+"\"}"
     return HttpResponse(JSON_string)
 
 def update_player_location(request):
@@ -103,7 +107,7 @@ def update_player_location(request):
     bombs = get_bombs_on_me(assassin_id)
     for bomb in bombs:
         if get_distance(lat, lng, bomb.bomb_lat, bomb.bomb_long) < Config.MAX_BOMB_KILL_DIST:
-            kill(target_id)
+            execute_kill(assassin_id)
             assassin_name = Assassin.objects.get(facebook_id=assassin_id).first_name
             victim_name = Assassin.objects.get(facebook_id=target_id).first_name
             message = "BOOM! "+assassin_name+" just killed "+victim_name+"!"
