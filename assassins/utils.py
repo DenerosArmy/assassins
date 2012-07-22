@@ -16,7 +16,10 @@ def add_player(uid, access_token, first_name, last_name, gender, photo, admin=Fa
                             is_admin=admin)
 
 def update_location(uid, latitude, longitude):
-    Player.objects.get(facebook_id=uid).update(location_lat= latitude, location_long=longitude)
+    player = Player.objects.get(facebook_id=uid)
+    player.location_lat = latitude
+    player.location_long = longitude
+    player.save()
 
 def get_location(uid):
     latitude = Player.objects.get(facebook_id=uid).get_location_latitude_display()

@@ -64,11 +64,12 @@ def get_location(request):
     JSON_string += "]"
     return HttpResponse(JSON_string)
 
-def update_location(request):
+def update_player_location(request):
     assassin_id = request.POST['fbid']
     lat = request.POST['lat']
     lng = request.POST['lng']
     update_location(assassin_id, lat, lng)
+    return HttpResponse("success")
 
 def new_game(request):
     add_session(request.POST['name'],
@@ -76,10 +77,10 @@ def new_game(request):
                 request.POST['uid'])
 
 def add_new_player(request):
-    #facebook_id = request.GET['id']
-    #uri = "http://graph.facebook.com/" + str(facebook_id)
-    #response = urllib2.urlopen(uri)
-    #uid = request.GET['id']
+    fbid = request.POST['fbid']
+    uri = "http://graph.facebook.com/" + str(fbid)
+    response = urllib2.urlopen(uri)
+    uid = request.GET['id']
     #response = simplejson.loads(response)
 
     add_player("59126693", "auth token", "Richie", "Zeng", "Male",
