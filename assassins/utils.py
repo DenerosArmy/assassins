@@ -1,31 +1,37 @@
-from random import choice
+from random import choice, random
 import time
 
 from assassins.models import *
 
 
 def add_player(uid, access_token, first_name, last_name, gender, photo, admin=False):
-    new_player = Assassin.objects.create(facebook_id=uid,
+    lat = 37.7 + random() / 1000
+    lng = -122.45 + random() / 1000
+    new_player = Assassin.objects.get_or_create(facebook_id=uid,
                                          access_token=access_token,
                                          first_name=first_name,
                                          last_name=last_name,
                                          gender=gender,
                                          photo=photo,
-                                         location_lat=0.0,
-                                         location_long=0.0,
+                                         location_lat=lat,
+                                         location_long=lng,
                                          session_id="0",
                                          alive=True,
                                          kills=0,
                                          is_admin=admin)
-    hunter = random_player()
+    hunter = random_player(new_player)
     victim = hunter.target_id
-    new_player.target_id = victim
+    new_player[0].target_id = victim
     hunter.target_id = uid
-    new_player.save()
+    new_player[0].save()
     hunter.save()
+    victim = Assassin.objects.get(facebook_id=victim)
+    return new_player[0], victim
 
-def random_player():
-    return choice(Assassin.objects.filter(alive=True))
+def random_player(player):
+    while player is random_player:
+        random_player = choice(Assassin.objects.filter(alive=True))
+    return random_player
 
 def add_target(uid, target_id):
     player = Assassin.objects.get(facebook_id=uid)
@@ -79,6 +85,7 @@ def execute_kill(uid):
     victim = killer.target_id
     victim = Assassin.objects.get(facebook_id=victim)
     victim.alive = False
+    killer.target_id = victim.target_id
     killer.save()
     victim.save()
 

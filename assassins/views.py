@@ -125,6 +125,7 @@ def new_game(request):
 
 def add_new_player(request):
     fbid = request.POST['fbid']
+
     uri = "http://graph.facebook.com/" + str(fbid)
 
     result = simplejson.load(urllib.urlopen(uri))
@@ -136,8 +137,8 @@ def add_new_player(request):
     username = result['username']
     picture = "http://graph.facebook.com/" + username + "/picture"
 
-    add_player(uid, "auth token", f_name, l_name, gender, picture)
-    response = f_name + l_name + ", " + picture
+    new_player, victim = add_player(uid, "auth token", f_name, l_name, gender, picture)
+    response = ", ".join([f_name + " " + l_name, picture, victim.first_name + " " + victim.last_name, victim.photo])
     return HttpResponse(response)
 
 def add_player_to_game(request):
