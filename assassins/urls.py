@@ -9,7 +9,8 @@ urlpatterns = patterns('',
     # Examples:
 
     # Web Services
-    #url(r'^$', 'assassins.views.home', name='home'),
+    url(r'^$', 'assassins.views.home', name='home'),
+    url(r'^dashboard', 'assassins.views.dashboard', name='dashboard'),
 
     # Endpoint Services
     # url(r'^$', 'assassins.views.home', name='home'),
