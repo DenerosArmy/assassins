@@ -21,8 +21,13 @@ class Player(models.Model):
                             photo=photo,
                             is_admin=admin)
 
-    def update_location(self, uid, loc_lat, loc_long):
-        self.objects.get(facebook_id=uid).update(location_lat= loc_lat, location_long=loc_long)
+    def update_location(self, uid, latitude, longitude):
+        self.objects.get(facebook_id=uid).update(location_lat= latitude, location_long=longitude)
+
+    def get_location(self, uid):
+        latitude = self.objects.get(facebook_id=uid).get_location_latitude_display()
+        longitude = self.objects.get(facebook_id=uid).get_location_longitude_display()
+        return latitude, longitude
 
     def update_session(self, uid, session):
         self.objects.get(facebook_id=uid).update(session=session)
@@ -58,4 +63,4 @@ class Feed(models.Model):
                             create_time=now)
 
     def get_feed(self, limit, session=None):
-        return self.objects.all()[]
+        return self.objects.order_by("-created_time")[:limit+1]
