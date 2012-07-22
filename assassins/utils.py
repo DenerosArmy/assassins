@@ -2,13 +2,18 @@ from assassins.models import *
 
 
 def add_player(uid, access_token, first_name, last_name, gender, photo, admin=False):
-    Player.objects.create(facebook_id=uid,
-                          access_token=access_token,
-                          first_name=first_name,
-                          last_name=last_name,
-                          gender=gender,
-                          photo=photo,
-                          is_admin=admin)
+    Assassin.objects.create(facebook_id=uid,
+                            access_token=access_token,
+                            first_name=first_name,
+                            last_name=last_name,
+                            gender=gender,
+                            photo=photo,
+                            location_lat=0.0,
+                            location_long=0.0,
+                            session_id="0",
+                            alive=True,
+                            kills=0,
+                            is_admin=admin)
 
 def update_location(uid, latitude, longitude):
     Player.objects.get(facebook_id=uid).update(location_lat= latitude, location_long=longitude)
@@ -30,9 +35,8 @@ def revoke_admin(uid):
 
 def add_session(session_name, description, uid):
     player = Player.objects.get(facebook_id=uid)
-    self.Session.create(session_name=session_name,
-                        description=description,
-                        creator=player)
+    Session.create(session_name=session_name,
+                        description=description)
 
 
 def post_to_feed(message, from_user=None, to_user=None, session=None):
