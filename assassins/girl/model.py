@@ -2,7 +2,6 @@ from django.db import models
 
 class Player(models.Model):
     facebook_id = models.CharField(primary_key=True)
-    access_token = models.CharField()
     first_name = models.CharField()
     last_name = models.CharField()
     gender = models.CharField()
@@ -39,7 +38,7 @@ class Session(models.Model):
     description = models.TextField()
     creator = models.ForeignKey(Player)
 
-    def add_session(self, session_name=None, description):
+    def add_session(self, session_name=None, description, uid):
         player = Player.objects.get(facebook_id=uid)
         self.objects.create(session_name=session_name,
                             description=description,

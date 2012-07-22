@@ -1,3 +1,4 @@
+import simplejson
 import urllib2
 
 from django.http import HttpRequest, HttpResponse
@@ -19,30 +20,24 @@ def kill_confirm(request):
 
 
 def new_game(request):
-    
-    pass
+    AssassinSession.add_session(request.GET('name'),
+                                request.GET('description'),
+                                request.GET('uid'))
 
 def add_new_player(request):
-    Assassin.add_player(request.GET('uid'),
-                      request.GET('access_token'),
-                      request.GET('first_name'),
-                      request.GET('last_name'),
-                      request.GET('gender'),
-                      request.GET('photo'),
-                      request.GET('admin'))
-    """
     facebook_id = request.GET('id')
     uri = "http://graph.facebook.com/" + str(facebook_id)
     response = urllib2.urlopen(uri)
+    uid = request.GET('id')
+    response = simplejson.loads(response)
 
-    player = Player.objects.create(facebook_id=facebook_id,
-                                   access_token = request.GET('auth_token'))
-    """
+    Assassin.add_player(response['uid'],
+                        #blahblahblah)
 
 def add_player_to_game(request):
     player = Assassin.objects.filter(facebook_id=uid)
     game = AssassinSession.objects.filter(session_id=game_id)
+    Assassin.update_session(player, game)
     
 def game_info(request):
-    #
     pass
