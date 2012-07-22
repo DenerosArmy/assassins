@@ -14,6 +14,15 @@ class Config(object):
     MAX_MELEE_KILL_DIST = 2
     MAX_BOMB_KILL_DIST = 10
 
+def revive_player(request):
+    uid = request.POST["fbid"]
+    execute_revive(uid)
+    return HttpResponse("revive player success")
+
+def revive_all(request):
+    execute_revive_all()
+    return HttpResponse("revive all success")
+
 def report_kill(request):
     assassin_id, lat, lng, target_id, tar_lat, tar_long = extract_location_data(request)
     if Assassin.objects.get(facebook_id=assassin_id).alive == True:
@@ -36,9 +45,6 @@ def confirm_melee_kill(request):
             post_to_feed(message, assassin_id, target_id)
             return HttpResponse("kill")
     return HttpResponse("nokill")
-
-def confirm_bomb_kill(request):
-    assassin_id, lat, lng, target_id, tar_lat, tar_long = extract_location_data(request)
 
 def assign_target(request):
     player = request.POST['player_id']
@@ -105,6 +111,7 @@ def get_statistics(request):
 def update_player_location(request):
     assassin_id, lat, lng, target_id, tar_lat, tar_long = extract_location_data(request)
     update_location(assassin_id, lat, lng)
+    """
     if Assassin.objects.get(facebook_id=assassin_id).alive == True:
         bombs = get_bombs_on_me(assassin_id)
         for bomb in bombs:
@@ -114,8 +121,10 @@ def update_player_location(request):
                 assassin_id = Assassin.objects.get(target_id=assassin_id).facebook_id
                 execute_kill(assassin_id)
                 message = "BOOM! "+assassin_name+" just killed "+victim_name+"!"
+                bomb.delete()
                 post_to_feed(message, assassin_id, target_id)
                 return HttpResponse("kill")
+    """
     return HttpResponse("nokill")
 
 def new_game(request):

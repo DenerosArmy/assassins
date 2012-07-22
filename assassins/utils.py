@@ -5,7 +5,7 @@ from assassins.models import *
 
 
 def add_player(uid, access_token, first_name, last_name, gender, photo, admin=False):
-    lat = 37.7 + random() / 1000
+    lat = 37.78 + random() / 1000
     lng = -122.45 + random() / 1000
     new_player = Assassin.objects.get_or_create(facebook_id=uid,
                                          access_token=access_token,
@@ -29,6 +29,7 @@ def add_player(uid, access_token, first_name, last_name, gender, photo, admin=Fa
     return new_player[0], victim
 
 def random_player(player):
+    random_player = choice(Assassin.objects.filter(alive=True))
     while player is random_player:
         random_player = choice(Assassin.objects.filter(alive=True))
     return random_player
@@ -88,6 +89,21 @@ def execute_kill(uid):
     killer.target_id = victim.target_id
     killer.save()
     victim.save()
+
+def execute_revive(uid):
+    player = Assassin.objects.get(facebook_id=uid)
+    player.alive = True
+    player.save()
+
+def execute_revive_all():
+    for player in Assassin.objects.filter():
+    #for player in Assassin.objects.filter(alive=False):
+        lat = 37.78 + random() / 1000
+        lng = -122.45 + random() / 1000
+        player.location_lat = lat
+        player.location_long = lng
+        player.alive = True
+        player.save()
 
 def add_bomb(owner_id, target_id, bomb_type, bomb_lat, bomb_long, secs=None):
     Bombs.objects.create(owner_id=owner_id,

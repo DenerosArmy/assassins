@@ -48,10 +48,14 @@
       }
       .feed-randomthing {
         width: 98%;
-        height: 30px;
+        /*height: 30px;*/
         /*height: 71%;*/
         border: 1px green solid;
         margin: 2% -5% 0% 0%;
+      }
+      .feed-randomthing ul {
+        margin-top: 10px;
+        margin-bottom: 10px;
       }
       span.map-canvas-overlay {
         visibility: hidden;
@@ -65,6 +69,7 @@
       }
       #feed-bar-thing {
         width: 100%;
+        margin-top: -5px;
       }
       #feed-bar-thing img {
         display: inline-block;
@@ -95,6 +100,13 @@
       }
       #feed-leaderboard {
         padding: 5px;
+      }
+      #feed-leaderboard ul {
+        list-style: none;
+      }
+      li.feed-list-item {
+        font-size: 12px;
+        padding-left: 5px;
       }
       .feed-randomthing-title {
         text-align: center;
@@ -233,23 +245,26 @@
           var bodyCount = data.body_count; //data['body_count'];
           var fatalities = data.fatalities; //data['fatalities'];
           var startTime = data.start_time;
-          console.log("peeps: " + totalSurvivors + " " + bodyCount);
+          //console.log("peeps: " + totalSurvivors + " " + bodyCount);
           var div = document.getElementById("feed-bar-thing");
           var barWidth = div.offsetWidth;
           //console.log(barWidth);
           var aliveWidth = barWidth * (totalSurvivors / totalPlayers);
           var deadWidth = barWidth * (bodyCount / totalPlayers);
-          console.log(aliveWidth + " " + deadWidth);
+          //console.log(aliveWidth + " " + deadWidth);
           $("#feed-bar-left").css('width',aliveWidth);
           $("#feed-bar-left").html('<img src="http://50.56.174.102/images/heart.png" />&nbsp;' + totalSurvivors);
           $("#feed-bar-right").css('width',deadWidth);
-          $("#feed-bar-right").html(bodyCount + '&nbsp;<img src="http://50.56.174.102/images/skull.png" />');
-
+          if (bodyCount != 0) {
+            $("#feed-bar-right").html(bodyCount + '&nbsp;<img src="http://50.56.174.102/images/skull.png" />');
+          } else {
+            $("#feed-bar-right").empty();
+          }
           var unix = Math.round(+new Date()/1000);
           var today = new Date(0);
           today.setUTCSeconds(unix); 
 
-          console.log(today);         
+          //console.log(today);         
 
           $("#feed-time").html(today.toString());
 
@@ -287,9 +302,19 @@
         <div id="feed-leaderboard">
           <div class="feed-randomthing-title">Leaderboard</div>
           <ul>
-
+            <li class="feed-list-item">Richie Zeng (10 kills, 1.58 kpp)</li>
+            <li class="feed-list-item">Mark Zuckerberg (8 kills, 1.54 kpp)</li>
+            <li class="feed-list-item">Jian Leong (4 kills, 1.47 kpp)</li>
           </ul>
         </div>
+      </div>
+      <div class="feed-randomthing">
+        <div class="feed-randomthing-title">Statistics</div>
+        <ul>
+          <li class="feed-list-item">Start: 7/22/2012 4:04AM PST</li>
+          <li class="feed-list-item">Location: San Francisco, CA</li>
+          <li class="feed-list-item">Creator: Richie Zeng</li>
+        </ul>
       </div>
     </div>
   </body>

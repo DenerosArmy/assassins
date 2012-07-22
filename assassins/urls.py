@@ -23,6 +23,8 @@ urlpatterns = patterns('',
     url(r'^poll_feed', 'assassins.views.get_posts', name='poll_feed'),
     url(r'^poll_stats', 'assassins.views.get_statistics', name='poll_stats'),
     url(r'^report_kill', 'assassins.views.report_kill', name='report_kill'),
+    url(r'^revive_player', 'assassins.views.revive_player', name='revive_player'),
+    url(r'^revive_all', 'assassins.views.revive_all', name='revive_all'),
     url(r'^update_location', 'assassins.views.update_player_location', name='update_player_location'),
 
     # url(r'^assassins/', include('assassins.foo.urls')),
