@@ -67,6 +67,7 @@ def execute_kill(uid):
     killer = Assassin.objects.get(facebook_id=uid)
     killer.kills += 1
     victim = killer.target_id
+    victim = Assassin.objects.get(facebook_id=victim)
     victim.alive = False
     killer.save()
     victim.save()
