@@ -14,7 +14,7 @@ def report_kill(request):
     assassin_id, lat, lng, target_id, tar_lat, tar_long = extract_location_data(request)
     kill(assassin_id)
     assassin_name = Assassin.get(facebook_id=assassin_id).get_first_name
-    victim_name = Assassin.get(facebook_id=victim_id).get_first_name
+    victim_name = Assassin.get(facebook_id=target_id).get_first_name
     message = assassin_name+" just killed "+victim_name+"!"
     post_to_feed(message, assassin_id, victim_name)
 
@@ -31,6 +31,11 @@ def confirm_melee_kill(request):
 
 def confirm_bomb_kill(request):
     assassin_id, lat, lng, target_id, tar_lat, tar_long = extract_location_data(request)
+
+def assign_target(request):
+    player = request.POST['player_id']
+    target = request.POST['target_id']
+    pass
 
 def plant_bomb(request):
     assassin_id, lat, lng, target_id, tar_lat, tar_long = extract_location_data(request)

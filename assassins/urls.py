@@ -15,12 +15,13 @@ urlpatterns = patterns('',
     # Endpoint Services
     # url(r'^$', 'assassins.views.home', name='home'),
     url(r'^add_new_player', 'assassins.views.add_new_player', name='add_new_player'),
-    url(r'^update_location', 'assassins.views.update_player_location', name='update_player_location'),
+    url(r'^assign_target', 'assassins.views.assign_target', name='assign_target'),
+    url(r'^confirm_bomb_kill', 'assassins.views.confirm_bomb_kill', name='confirm_bomb_kill'),
+    url(r'^confirm_melee_kill', 'assassins.views.confirm_mellee_kill', name='confirm_melee_kill'),
+    url(r'^plant_bomb', 'assassins.views.plant_bomb', name='plant_bomb'),
     url(r'^poll_location', 'assassins.views.get_location', name='poll_location'),
     url(r'^report_kill', 'assassins.views.report_kill', name='report_kill'),
-    url(r'^confirm_melee_kill', 'assassins.views.confirm_mellee_kill', name='confirm_melee_kill'),
-    url(r'^confirm_bomb_kill', 'assassins.views.confirm_bomb_kill', name='confirm_bomb_kill'),
-    url(r'^plant_bomb', 'assassins.views.plant_bomb', name='plant_bomb'),
+    url(r'^update_location', 'assassins.views.update_player_location', name='update_player_location'),
 
     # url(r'^assassins/', include('assassins.foo.urls')),
 
