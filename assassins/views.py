@@ -6,9 +6,12 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
-from girl.config import Config
 from models import *
 from utils import *
+
+class Config(object):
+    MAX_MELEE_KILL_DIST = 2
+    MAX_BOMB_KILL_DIST = 10
 
 def report_kill(request):
     assassin_id, lat, lng, target_id, tar_lat, tar_long = extract_location_data(request)
@@ -42,8 +45,8 @@ def assign_target(request):
 def plant_bomb(request):
     assassin_id, lat, lng, target_id, tar_lat, tar_long = extract_location_data(request)
     bomb_type = request.POST['type']
-    if bomb_type in ('sticky', 'mine'):
-        add_bomb(assassin_id, target_id, bomb_type, lat, lng, seconds)
+    if bomb_type in 'mine':
+        add_bomb(assassin_id, target_id, bomb_type, lat, lng)
 
 def extract_location_data(request):
     assassin_id = request.POST['fbid']
@@ -83,6 +86,14 @@ def get_posts(request):
     if JSON_string != "[":
         JSON_string = JSON_string[:-1]
     JSON_string += "]"
+    return HttpResponse(JSON_string)
+
+def get_statistics(request):
+    total_players = Assassin.objects.count()
+    total_survivors = Assassin.objects.filter(alive=True).count()
+    body_count = Assassin.objects.filter(alive=False).count()
+    fatalities = Assassin.objects.aggregate(Sum('kills'))
+    JSON_string = "{\"total_players\":\""+total_players+",\"total_survivors\":\""+total_survivors+",\"body_count\":\""+body_count+",\"fatalities\":\""+fatalities+"\"}"
     return HttpResponse(JSON_string)
 
 def update_player_location(request):

@@ -21,6 +21,7 @@ urlpatterns = patterns('',
     url(r'^plant_bomb', 'assassins.views.plant_bomb', name='plant_bomb'),
     url(r'^poll_location', 'assassins.views.poll_location', name='poll_location'),
     url(r'^poll_feed', 'assassins.views.get_posts', name='poll_feed'),
+    url(r'^poll_stats', 'assassins.views.get_statistics', name='poll_stats'),
     url(r'^report_kill', 'assassins.views.report_kill', name='report_kill'),
     url(r'^update_location', 'assassins.views.update_player_location', name='update_player_location'),
 
