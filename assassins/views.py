@@ -70,12 +70,29 @@ def get_location(request):
     JSON_string += "]"
     return HttpResponse(JSON_string)
 
+def get_posts(request):
+    posts_sets = Feed.get_limit(5)
+    JSON_string = "["
+    for post_set in post_sets:
+        JSON_string += "{\"fbid\":\""+post_set.facebook_id+"\","
+        JSON_string += "\"name\":\""+post_set.first_name+"\","
+        JSON_string += "\"photo\":\""+post_set.photo+"\","
+        JSON_string += "\"lat\":\""+str(post_set.location_lat)+"\","
+        JSON_string += "\"lng\":\""+str(post_set.location_long)+"\"},"
+    if JSON_string != "[":
+        JSON_string = JSON_string[:-1]
+    JSON_string += "]"
+    return HttpResponse(JSON_string)
+
 def update_player_location(request):
     assassin_id = request.POST['fbid']
     lat = request.POST['lat']
     lng = request.POST['lng']
     update_location(assassin_id, lat, lng)
     #bombs = Bombs.objects.filter(target_id=assassin_id)
+    #for bomb in bombs:
+        #b_lat
+        #if get_distancebomb.bomb_lat,
     return HttpResponse("success")
 
 def new_game(request):
@@ -103,7 +120,7 @@ def add_player_to_game(request):
     player = Assassin.objects.filter(facebook_id=uid)
     game = AssassinSession.objects.filter(session_id=game_id)
     update_session(player, game)
-    
+
 def home(request):
     players = Player.objects.all()
     locations = []
