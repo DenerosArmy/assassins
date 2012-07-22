@@ -76,14 +76,16 @@ def new_game(request):
                 request.GET['uid'])
 
 def add_new_player(request):
-    facebook_id = request.GET['id']
-    uri = "http://graph.facebook.com/" + str(facebook_id)
-    response = urllib2.urlopen(uri)
-    uid = request.GET['id']
-    response = simplejson.loads(response)
+    #facebook_id = request.GET['id']
+    #uri = "http://graph.facebook.com/" + str(facebook_id)
+    #response = urllib2.urlopen(uri)
+    #uid = request.GET['id']
+    #response = simplejson.loads(response)
 
+    print(request.GET['fbid'])
     Assassin.add_player("590037593", "auth token", "Richie", "Zeng", "Male",
                         "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-snc4/157664_590037593_1292406756_q.jpg")
+    return HttpResponse("hi")
 
 def add_player_to_game(request):
     player = Assassin.objects.filter(facebook_id=uid)
