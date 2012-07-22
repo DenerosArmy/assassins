@@ -163,9 +163,12 @@
 
 			function refreshFeed() {
 				$.ajax({
-					url: "http://50.56.174.102:8000/pull_feed",
+					url: "http://50.56.174.102:8000/poll_feed",
 					dataType: 'json'
 				}).always(function(data) {
+					$nom = "";
+					for ($i = 0; $i < data.length, $i++) {
+						console.log(data[$i]);
 					$("#feed-liveupdate").empty().
 				});
 			}
