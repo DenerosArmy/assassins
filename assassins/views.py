@@ -1,4 +1,5 @@
 import simplejson
+import urllib
 import urllib2
 
 from django.http import HttpRequest, HttpResponse
@@ -79,12 +80,17 @@ def new_game(request):
 def add_new_player(request):
     fbid = request.POST['fbid']
     uri = "http://graph.facebook.com/" + str(fbid)
-    response = urllib2.urlopen(uri)
-    uid = request.GET['id']
-    #response = simplejson.loads(response)
 
-    add_player("59126693", "auth token", "Richie", "Zeng", "Male",
-               "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-snc4/157664_590037593_1292406756_q.jpg")
+    result = simplejson.load(urllib.urlopen(uri))
+
+    uid = result['id']
+    f_name = result['first_name']
+    l_name = result['last_name']
+    gender = result['gender']
+    username = result['username']
+    picture = "http://graph.facebook.com/" + username + "/picture"
+
+    add_player(uid, "auth token", f_name, l_name, gender, picture)
     return HttpResponse(request.POST['fbid'])
 
 def add_player_to_game(request):
@@ -114,3 +120,6 @@ def home(request):
         post['lng'] = str(post_set.location_long)
         posts.append(post)
     return render_to_response('home.html', RequestContext(request,{"posts":posts, "locations":locations}))
+
+def dashboard(request):
+    return render_to_response('dashboard.html')
