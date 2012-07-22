@@ -51,8 +51,8 @@ class Session(models.Model):
 class Feed(models.Model):
     post_id = models.AutoField(primary_key=True)
     session = models.ForeignKey(Session)
-    from_user = models.ForeignKey(Player)
-    to_user = models.ForeignKey(Player)
+    from_user = models.CharField('Player')
+    to_user = models.ForeignKey('Player')
     message = models.CharField(max_length=256)
     create_time = models.IntegerField()
 
@@ -71,7 +71,7 @@ class Feed(models.Model):
 class Assassin(Player):
     kills = models.IntegerField()
     target_id = models.CharField(max_length=16)
-    games = models.ForeignKey(Session)
+    games = models.ForeignKey('Session')
 
 class AssassinSession(Session):
     live_players = models.IntegerField()
