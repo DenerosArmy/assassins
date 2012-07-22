@@ -51,8 +51,8 @@ class Session(models.Model):
 class Feed(models.Model):
     post_id = models.AutoField(primary_key=True)
     session = models.ForeignKey(Session)
-    from_user = models.ForeignKey('Player')
-    to_user = models.ForeignKey('Player')
+    from_user = models.CharField(max_length=16)
+    to_user = models.CharField(max_length=16)
     message = models.CharField(max_length=256)
     create_time = models.IntegerField()
 
