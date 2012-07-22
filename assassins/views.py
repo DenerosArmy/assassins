@@ -60,11 +60,11 @@ def get_location(request):
     players = Player.objects.all()
     JSON_string = "["
     for player in players:
-        JSON_string += "{'fbid':'"+player.facebook_id+"',"
-        JSON_string += "'name':'"+player.first_name+"',"
-        JSON_string += "'photo':'"+player.photo+"',"
-        JSON_string += "'lat':'"+str(player.location_lat)+"',"
-        JSON_string += "'lng':'"+str(player.location_long)+"'},"
+        JSON_string += "{\"fbid\":\""+player.facebook_id+"\","
+        JSON_string += "\"name\":\""+player.first_name+"\","
+        JSON_string += "\"photo\":\""+player.photo+"\","
+        JSON_string += "\"lat\":\""+str(player.location_lat)+"\","
+        JSON_string += "\"lng\":\""+str(player.location_long)+"\"},"
     if JSON_string != "[":
         JSON_string = JSON_string[:-1]
     JSON_string += "]"
@@ -75,6 +75,7 @@ def update_player_location(request):
     lat = request.POST['lat']
     lng = request.POST['lng']
     update_location(assassin_id, lat, lng)
+    #bombs = Bombs.objects.filter(target_id=assassin_id)
     return HttpResponse("success")
 
 def new_game(request):
