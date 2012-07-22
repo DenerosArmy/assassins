@@ -34,6 +34,7 @@ def extract_location_data(request):
     target = Assassin.objects.filter(facebook_id=target_id)
     tar_lat, tar_long = Assassin.get_location(target_id)
     return assassin_id, lat, lng, target_id, tar_lat, tar_long
+
 def get_distance(lat1, lng1, lat2, lng2):
     return sqrt(((lat1-lat2)**2)+((lng1-lng2)**2))
 
