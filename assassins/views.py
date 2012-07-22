@@ -13,8 +13,8 @@ from utils import *
 def report_kill(request):
     assassin_id, lat, lng, target_id, tar_lat, tar_long = extract_location_data(request)
     kill(assassin_id)
-    assassin_name = Assassin.get(facebook_id=assassin_id).get_first_name
-    victim_name = Assassin.get(facebook_id=target_id).get_first_name
+    assassin_name = Assassin.objects.get(facebook_id=assassin_id).first_name
+    victim_name = Assassin.objects.get(facebook_id=target_id).first_name
     message = assassin_name+" just killed "+victim_name+"!"
     post_to_feed(message, assassin_id, victim_name)
 
@@ -35,7 +35,8 @@ def confirm_bomb_kill(request):
 def assign_target(request):
     player = request.POST['player_id']
     target = request.POST['target_id']
-    pass
+    add_target(player, target)
+    return HttpResponse("target_assigned")
 
 def plant_bomb(request):
     assassin_id, lat, lng, target_id, tar_lat, tar_long = extract_location_data(request)
@@ -44,19 +45,19 @@ def plant_bomb(request):
         add_bomb(assassin_id, target_id, bomb_type, lat, lng, seconds)
 
 def extract_location_data(request):
-    assassin_id = request.GET['fbid']
-    lat = request.GET['lat']
-    lng = request.GET['lng']
-    assassin = Assassin.objects.filter(facebook_id=assassin_id)
-    target_id = assassin.get_target_id
-    target = Assassin.objects.filter(facebook_id=target_id)
+    assassin_id = request.POST['fbid']
+    lat = request.POST['lat']
+    lng = request.POST['lng']
+    assassin = Assassin.objects.get(facebook_id=assassin_id)
+    target_id = assassin.target_id
+    target = Assassin.objects.get(facebook_id=target_id)
     tar_lat, tar_long = get_location(target_id)
     return assassin_id, lat, lng, target_id, tar_lat, tar_long
 
 def get_distance(lat1, lng1, lat2, lng2):
     return sqrt(((lat1-lat2)**2)+((lng1-lng2)**2))
 
-def get_location(request):
+def poll_location(request):
     players = Player.objects.all()
     JSON_string = "["
     for player in players:
@@ -99,8 +100,8 @@ def add_new_player(request):
     return HttpResponse(request.POST['fbid'])
 
 def add_player_to_game(request):
-    player = Assassin.objects.filter(facebook_id=uid)
-    game = AssassinSession.objects.filter(session_id=game_id)
+    player = Assassin.objects.get(facebook_id=uid)
+    game = AssassinSession.objects.get(session_id=game_id)
     update_session(player, game)
     
 def home(request):

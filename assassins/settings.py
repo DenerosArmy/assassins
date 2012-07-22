@@ -1,7 +1,10 @@
 # Django settings for assassins project.
+import os
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
+
+PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 
 ADMINS = (
     ('Richie', 'richzeng@gmail.com'),
@@ -108,6 +111,7 @@ ROOT_URLCONF = 'assassins.urls'
 WSGI_APPLICATION = 'assassins.wsgi.application'
 
 TEMPLATE_DIRS = (
+    os.path.join(PROJECT_ROOT, 'templates/')
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.

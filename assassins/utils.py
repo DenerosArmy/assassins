@@ -1,3 +1,5 @@
+import time
+
 from assassins.models import *
 
 
@@ -15,8 +17,8 @@ def add_player(uid, access_token, first_name, last_name, gender, photo, admin=Fa
                             kills=0,
                             is_admin=admin)
 
-def assign_target(uid, target_id):
-    player = Player.objects.get(facebook_id=uid)
+def add_target(uid, target_id):
+    player = Assassin.objects.get(facebook_id=uid)
     player.target_id = target_id
     player.save()
 
@@ -27,12 +29,14 @@ def update_location(uid, latitude, longitude):
     player.save()
 
 def get_location(uid):
-    latitude = Player.objects.get(facebook_id=uid).get_location_latitude_display()
-    longitude = Player.objects.get(facebook_id=uid).get_location_longitude_display()
+    latitude = Player.objects.get(facebook_id=uid).location_lat
+    longitude = Player.objects.get(facebook_id=uid).location_long
     return latitude, longitude
 
 def update_session(uid, session):
-    Player.objects.get(facebook_id=uid).update(session=session)
+    player = Player.objects.get(facebook_id=uid)
+    player.session = session
+    player.save()
 
 def make_admin(uid):
     Player.objects.get(facebook_id=uid).update(is_admin=True)
@@ -48,8 +52,7 @@ def add_session(session_name, description, uid):
 
 
 def post_to_feed(message, from_user=None, to_user=None, session=None):
-    now = datetime.datetime.now()
-    now = time.mktime(now.timetuple())
+    now = time.time()
     Feed.objects.create(message=message,
                         from_user=from_user, 
                         to_user=to_user, 
@@ -61,7 +64,9 @@ def get_feed(limit, session=None):
 
 
 def kill(uid):
-    Assassin.objects.get(facebook_id=uid).update(alive=False)
+    victim = Assassin.objects.get(facebook_id=uid)
+    victim.alive = False
+    victim.save()
 
 def add_bomb(owner_id, target_id, bomb_type, bomb_lat, bomb_long, secs=None):
     Bombs.objects.create(owner_id=owner_id,

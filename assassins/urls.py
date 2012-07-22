@@ -19,7 +19,7 @@ urlpatterns = patterns('',
     url(r'^confirm_bomb_kill', 'assassins.views.confirm_bomb_kill', name='confirm_bomb_kill'),
     url(r'^confirm_melee_kill', 'assassins.views.confirm_mellee_kill', name='confirm_melee_kill'),
     url(r'^plant_bomb', 'assassins.views.plant_bomb', name='plant_bomb'),
-    url(r'^poll_location', 'assassins.views.get_location', name='poll_location'),
+    url(r'^poll_location', 'assassins.views.poll_location', name='poll_location'),
     url(r'^report_kill', 'assassins.views.report_kill', name='report_kill'),
     url(r'^update_location', 'assassins.views.update_player_location', name='update_player_location'),
 

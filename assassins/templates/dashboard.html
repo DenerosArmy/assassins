@@ -1,4 +1,4 @@
-CTYPE html>
+<!DOCTYPE html>
 <html>
   <head>
     <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.5.1/build/cssreset/cssreset-min.css">
@@ -137,15 +137,13 @@ CTYPE html>
       google.maps.event.addDomListener(window, 'load', initialize);
 
       function refreshLocations() {
-        $.ajax({
-          type: 'GET',
-          url: "http://50.56.174.102:8000/poll_location",
-          processData: true,
-          data: {},
+				$.ajax({
+					url: "http://50.56.174.102:8000/poll_location",
           dataType: 'json'
-        }).done(function(data) {
+				}).always(function(data) {
+					console.log('lol');
           deleteOverlays();
-          //console.log(data);
+          console.log('yay: ' + data);
           for ($i = 0; $i < data.length; $i++) {
             latitude = data[$i][3];
             longitude = data[$i][4];
