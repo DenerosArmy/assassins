@@ -65,15 +65,15 @@ def get_location(request):
     return HttpResponse(JSON_string)
 
 def update_location(request):
-    assassin_id = request.GET['fbid']
-    lat = request.GET['lat']
-    lng = request.GET['lng']
+    assassin_id = request.POST['fbid']
+    lat = request.POST['lat']
+    lng = request.POST['lng']
     update_location(assassin_id, lat, lng)
 
 def new_game(request):
-    add_session(request.GET['name'],
-                request.GET['description'],
-                request.GET['uid'])
+    add_session(request.POST['name'],
+                request.POST['description'],
+                request.POST['uid'])
 
 def add_new_player(request):
     #facebook_id = request.GET['id']
