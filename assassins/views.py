@@ -17,13 +17,11 @@ def kill_confirm(request):
 
 
 def new_game(request):
-    
     pass
 
 def add_new_player(request):
     facebook_id = request.GET('id')
     uri = "http://graph.facebook.com/" + str(facebook_id)
-
     pass
 
 def game_info(request):
