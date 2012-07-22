@@ -1,11 +1,14 @@
-from girl.models import Admins, Feed, Game, Player
+from django.db import models
+
+from girl.models import Feed, Player, Session
+
 
 class Assassin(Player):
     kills = models.IntegerField()
-    target = models.OneToOne(Assassin)
-    games = models.ForeignKey(Game)
+    target_id = models.CharField()
+    games = models.ForeignKey(Session)
 
-class AssassinSession(Game):
+class AssassinSession(Session):
     live_players = models.IntegerField()
     time = models.FloatField()
     length = models.IntegerField()
