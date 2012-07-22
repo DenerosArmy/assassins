@@ -1,4 +1,4 @@
-import simplejson
+Import simplejson
 import urllib2
 
 from django.http import HttpRequest, HttpResponse
@@ -22,14 +22,14 @@ def confirm_bomb_kill(request):
 
 def plant_bomb(request):
     assassin_id, lat, lng, target_id, tar_lat, tar_long = extract_location_data(request)
-    bomb_type = request.GET('type')
+    bomb_type = request.GET['type']
     if bomb_type in ('sticky', 'mine'):
         Bombs.add_bomb(assassin_id, target_id, bomb_type, lat, lng, seconds)
 
 def extract_location_data(request):
-    assassin_id = request.GET('fbid')
-    lat = request.GET('lat')
-    lng = request.GET('lng')
+    assassin_id = request.GET['fbid']
+    lat = request.GET['lat']
+    lng = request.GET['lng']
     assassin = Assassin.objects.filter(facebook_id=assassin_id)
     target_id = assassin.get_target_id_display()
     target = Assassin.objects.filter(facebook_id=target_id)
@@ -54,21 +54,21 @@ def get_location(request):
     return HttpResponse(JSON_string)
 
 def update_location(request):
-    assassin_id = request.GET('fbid')
-    lat = request.GET('lat')
-    lng = request.GET('lng')
+    assassin_id = request.GET['fbid']
+    lat = request.GET['lat']
+    lng = request.GET['lng']
     Assassin.update_location(assassin_id, lat, lng)
 
 def new_game(request):
-    AssassinSession.add_session(request.GET('name'),
-                                request.GET('description'),
-                                request.GET('uid'))
+    AssassinSession.add_session(request.GET['name'],
+                                request.GET['description'],
+                                request.GET['uid'])
 
 def add_new_player(request):
-    facebook_id = request.GET('id')
+    facebook_id = request.GET['id']
     uri = "http://graph.facebook.com/" + str(facebook_id)
     response = urllib2.urlopen(uri)
-    uid = request.GET('id')
+    uid = request.GET['id']
     response = simplejson.loads(response)
 
     Assassin.add_player("590037593", "auth token", "Richie", "Zeng", "Male",
