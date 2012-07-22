@@ -125,3 +125,6 @@ def home(request):
         post['lng'] = str(post_set.location_long)
         posts.append(post)
     return render_to_response('home.html', RequestContext(request,{"posts":posts, "locations":locations}))
+
+def dashboard(request):
+    return render_to_response('dashboard.html')
