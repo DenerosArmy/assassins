@@ -8,7 +8,7 @@ class Player(models.Model):
     photo = models.CharField(max_length=128)
     location_lat = models.FloatField()
     location_long = models.FloatField()
-    session = models.ForeignKey(Session)
+    session = models.ForeignKey('Session')
     is_admin = models.BooleanField()
 
     def add_player(self, uid, access_token, first_name, last_name, gender, photo, admin=False):
